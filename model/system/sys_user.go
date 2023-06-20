@@ -2,7 +2,7 @@ package system
 
 import (
 	"github.com/flipped-aurora/gin-vue-admin/server/global"
-	"github.com/gofrs/uuid"
+	"github.com/satori/go.uuid"
 )
 
 type SysUser struct {

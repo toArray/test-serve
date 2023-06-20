@@ -17,7 +17,6 @@ type ApiGroup struct {
 	AutoCodeHistoryApi
 	DictionaryDetailApi
 	AuthorityBtnApi
-	ChatGptApi
 }
 
 var (
@@ -36,5 +35,4 @@ var (
 	autoCodeHistoryService  = service.ServiceGroupApp.SystemServiceGroup.AutoCodeHistoryService
 	dictionaryDetailService = service.ServiceGroupApp.SystemServiceGroup.DictionaryDetailService
 	authorityBtnService     = service.ServiceGroupApp.SystemServiceGroup.AuthorityBtnService
-	chatGptService          = service.ServiceGroupApp.SystemServiceGroup.ChatGptService
 )

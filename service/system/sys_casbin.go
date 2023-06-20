@@ -2,9 +2,6 @@ package system
 
 import (
 	"errors"
-	"strconv"
-	"sync"
-
 	"github.com/casbin/casbin/v2"
 	"github.com/casbin/casbin/v2/model"
 	gormadapter "github.com/casbin/gorm-adapter/v3"
@@ -12,6 +9,8 @@ import (
 	"github.com/flipped-aurora/gin-vue-admin/server/model/system/request"
 	_ "github.com/go-sql-driver/mysql"
 	"go.uber.org/zap"
+	"strconv"
+	"sync"
 )
 
 //@author: [piexlmax](https://github.com/piexlmax)
@@ -36,6 +35,10 @@ func (casbinService *CasbinService) UpdateCasbin(AuthorityID uint, casbinInfos [
 	if !success {
 		return errors.New("存在相同api,添加失败,请联系管理员")
 	}
+	err := e.InvalidateCache()
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -51,7 +54,7 @@ func (casbinService *CasbinService) UpdateCasbinApi(oldPath string, newPath stri
 		"v2": newMethod,
 	}).Error
 	e := casbinService.Casbin()
-	err = e.LoadPolicy()
+	err = e.InvalidateCache()
 	if err != nil {
 		return err
 	}
@@ -95,17 +98,13 @@ func (casbinService *CasbinService) ClearCasbin(v int, p ...string) bool {
 //@return: *casbin.Enforcer
 
 var (
-	syncedCachedEnforcer *casbin.SyncedCachedEnforcer
-	once                 sync.Once
+	cachedEnforcer *casbin.CachedEnforcer
+	once           sync.Once
 )
 
-func (casbinService *CasbinService) Casbin() *casbin.SyncedCachedEnforcer {
+func (casbinService *CasbinService) Casbin() *casbin.CachedEnforcer {
 	once.Do(func() {
-		a, err := gormadapter.NewAdapterByDB(global.GVA_DB)
-		if err != nil {
-			zap.L().Error("适配数据库失败请检查casbin表是否为InnoDB引擎!", zap.Error(err))
-			return
-		}
+		a, _ := gormadapter.NewAdapterByDB(global.GVA_DB)
 		text := `
 		[request_definition]
 		r = sub, obj, act
@@ -127,9 +126,9 @@ func (casbinService *CasbinService) Casbin() *casbin.SyncedCachedEnforcer {
 			zap.L().Error("字符串加载模型失败!", zap.Error(err))
 			return
 		}
-		syncedCachedEnforcer, _ = casbin.NewSyncedCachedEnforcer(m, a)
-		syncedCachedEnforcer.SetExpireTime(60 * 60)
-		_ = syncedCachedEnforcer.LoadPolicy()
+		cachedEnforcer, _ = casbin.NewCachedEnforcer(m, a)
+		cachedEnforcer.SetExpireTime(60 * 60)
+		_ = cachedEnforcer.LoadPolicy()
 	})
-	return syncedCachedEnforcer
+	return cachedEnforcer
 }

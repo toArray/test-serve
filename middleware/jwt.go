@@ -1,8 +1,6 @@
 package middleware
 
 import (
-	"errors"
-	"github.com/golang-jwt/jwt/v4"
 	"strconv"
 	"time"
 
@@ -37,7 +35,7 @@ func JWTAuth() gin.HandlerFunc {
 		// parseToken 解析token包含的信息
 		claims, err := j.ParseToken(token)
 		if err != nil {
-			if errors.Is(err, utils.TokenExpired) {
+			if err == utils.TokenExpired {
 				response.FailWithDetailed(gin.H{"reload": true}, "授权已过期", c)
 				c.Abort()
 				return
@@ -55,13 +53,13 @@ func JWTAuth() gin.HandlerFunc {
 		//	response.FailWithDetailed(gin.H{"reload": true}, err.Error(), c)
 		//	c.Abort()
 		//}
-		if claims.ExpiresAt.Unix()-time.Now().Unix() < claims.BufferTime {
+		if claims.ExpiresAt-time.Now().Unix() < claims.BufferTime {
 			dr, _ := utils.ParseDuration(global.GVA_CONFIG.JWT.ExpiresTime)
-			claims.ExpiresAt = jwt.NewNumericDate(time.Now().Add(dr))
+			claims.ExpiresAt = time.Now().Add(dr).Unix()
 			newToken, _ := j.CreateTokenByOldToken(token, *claims)
 			newClaims, _ := j.ParseToken(newToken)
 			c.Header("new-token", newToken)
-			c.Header("new-expires-at", strconv.FormatInt(newClaims.ExpiresAt.Unix(), 10))
+			c.Header("new-expires-at", strconv.FormatInt(newClaims.ExpiresAt, 10))
 			if global.GVA_CONFIG.System.UseMultipoint {
 				RedisJwtToken, err := jwtService.GetRedisJWT(newClaims.Username)
 				if err != nil {

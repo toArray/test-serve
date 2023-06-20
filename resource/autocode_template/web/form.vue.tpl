@@ -30,14 +30,11 @@
           <el-option v-for="item in [{{ .DataTypeLong }}]" :key="item" :label="item" :value="item" />
         </el-select>
       {{- end }}
-       {{- if eq .FieldType "picture" }}
-          <SelectImage v-model="formData.{{ .FieldJson }}" />
-       {{- end }}
-       </el-form-item>
+        </el-form-item>
       {{- end }}
         <el-form-item>
-          <el-button type="primary" @click="save">保存</el-button>
-          <el-button type="primary" @click="back">返回</el-button>
+          <el-button size="small" type="primary" @click="save">保存</el-button>
+          <el-button size="small" type="primary" @click="back">返回</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -62,12 +59,6 @@ import { getDictFunc } from '@/utils/format'
 import { useRoute, useRouter } from "vue-router"
 import { ElMessage } from 'element-plus'
 import { ref, reactive } from 'vue'
-{{- if .HasPic }}
-import SelectImage from '@/components/selectImage/selectImage.vue'
-{{- end }}
-{{- if .HasFile }}
-import SelectFile from '@/components/selectFile/selectFile.vue'
-{{- end }}
 const route = useRoute()
 const router = useRouter()
 

@@ -6,6 +6,7 @@
         "contact": {},
         "version": "0.0.1"
     },
+    "basePath": "/",
     "paths": {
         "/api/createApi": {
             "post": {
@@ -138,40 +139,6 @@
                 "responses": {
                     "200": {
                         "description": "删除选中Api",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/response.Response"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "msg": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                }
-            }
-        },
-        "/api/freshCasbin": {
-            "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "SysApi"
-                ],
-                "summary": "刷新casbin缓存",
-                "responses": {
-                    "200": {
-                        "description": "刷新成功",
                         "schema": {
                             "allOf": [
                                 {
@@ -1492,7 +1459,7 @@
                 "summary": "生成验证码",
                 "responses": {
                     "200": {
-                        "description": "生成验证码,返回包括随机数id,base64,验证码长度,是否开启验证码",
+                        "description": "生成验证码,返回包括随机数id,base64,验证码长度",
                         "schema": {
                             "allOf": [
                                 {
@@ -2009,6 +1976,161 @@
                         "description": "{\"success\":true,\"data\":{},\"msg\":\"发送成功\"}",
                         "schema": {
                             "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/excel/downloadTemplate": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "excel"
+                ],
+                "summary": "下载模板",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "模板名称",
+                        "name": "fileName",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/excel/exportExcel": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/octet-stream"
+                ],
+                "tags": [
+                    "excel"
+                ],
+                "summary": "导出Excel",
+                "parameters": [
+                    {
+                        "description": "导出Excel文件信息",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/example.ExcelInfo"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/excel/importExcel": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "excel"
+                ],
+                "summary": "导入Excel文件",
+                "parameters": [
+                    {
+                        "type": "file",
+                        "description": "导入Excel文件",
+                        "name": "file",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "导入Excel文件",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "msg": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/excel/loadExcel": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "excel"
+                ],
+                "summary": "加载Excel数据",
+                "responses": {
+                    "200": {
+                        "description": "加载Excel数据,返回包括列表,总数,页码,每页数量",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/response.PageResult"
+                                        },
+                                        "msg": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     }
                 }
@@ -4802,14 +4924,6 @@
                 "key-long": {
                     "description": "验证码长度",
                     "type": "integer"
-                },
-                "open-captcha": {
-                    "description": "防爆破验证码开启此数，0代表每次登录都需要验证码，其他数字代表错误密码此数，如3代表错误三次后出现验证码",
-                    "type": "integer"
-                },
-                "open-captcha-timeout": {
-                    "description": "防爆破验证码超时时间，单位：s(秒)",
-                    "type": "integer"
                 }
             }
         },
@@ -4826,6 +4940,39 @@
                 },
                 "tableName": {
                     "description": "需要清理的表名",
+                    "type": "string"
+                }
+            }
+        },
+        "config.Email": {
+            "type": "object",
+            "properties": {
+                "from": {
+                    "description": "收件人",
+                    "type": "string"
+                },
+                "host": {
+                    "description": "服务器地址",
+                    "type": "string"
+                },
+                "is-ssl": {
+                    "description": "是否SSL",
+                    "type": "boolean"
+                },
+                "nickname": {
+                    "description": "昵称",
+                    "type": "string"
+                },
+                "port": {
+                    "description": "端口",
+                    "type": "integer"
+                },
+                "secret": {
+                    "description": "密钥",
+                    "type": "string"
+                },
+                "to": {
+                    "description": "收件人:多个以英文逗号分隔",
                     "type": "string"
                 }
             }
@@ -4892,64 +5039,6 @@
                 }
             }
         },
-        "config.Mssql": {
-            "type": "object",
-            "properties": {
-                "config": {
-                    "description": "高级配置",
-                    "type": "string"
-                },
-                "db-name": {
-                    "description": "数据库名",
-                    "type": "string"
-                },
-                "engine": {
-                    "description": "数据库引擎，默认InnoDB",
-                    "type": "string",
-                    "default": "InnoDB"
-                },
-                "log-mode": {
-                    "description": "是否开启Gorm全局日志",
-                    "type": "string"
-                },
-                "log-zap": {
-                    "description": "是否通过zap写入日志文件",
-                    "type": "boolean"
-                },
-                "max-idle-conns": {
-                    "description": "空闲中的最大连接数",
-                    "type": "integer"
-                },
-                "max-open-conns": {
-                    "description": "打开到数据库的最大连接数",
-                    "type": "integer"
-                },
-                "password": {
-                    "description": "数据库密码",
-                    "type": "string"
-                },
-                "path": {
-                    "description": "服务器地址:端口",
-                    "type": "string"
-                },
-                "port": {
-                    "description": ":端口",
-                    "type": "string"
-                },
-                "prefix": {
-                    "description": "全局表前缀，单独定义TableName则不生效",
-                    "type": "string"
-                },
-                "singular": {
-                    "description": "是否开启全局禁用复数，true表示开启",
-                    "type": "boolean"
-                },
-                "username": {
-                    "description": "数据库用户名",
-                    "type": "string"
-                }
-            }
-        },
         "config.Mysql": {
             "type": "object",
             "properties": {
@@ -4961,11 +5050,6 @@
                     "description": "数据库名",
                     "type": "string"
                 },
-                "engine": {
-                    "description": "数据库引擎，默认InnoDB",
-                    "type": "string",
-                    "default": "InnoDB"
-                },
                 "log-mode": {
                     "description": "是否开启Gorm全局日志",
                     "type": "string"
@@ -4993,72 +5077,6 @@
                 "port": {
                     "description": ":端口",
                     "type": "string"
-                },
-                "prefix": {
-                    "description": "全局表前缀，单独定义TableName则不生效",
-                    "type": "string"
-                },
-                "singular": {
-                    "description": "是否开启全局禁用复数，true表示开启",
-                    "type": "boolean"
-                },
-                "username": {
-                    "description": "数据库用户名",
-                    "type": "string"
-                }
-            }
-        },
-        "config.Oracle": {
-            "type": "object",
-            "properties": {
-                "config": {
-                    "description": "高级配置",
-                    "type": "string"
-                },
-                "db-name": {
-                    "description": "数据库名",
-                    "type": "string"
-                },
-                "engine": {
-                    "description": "数据库引擎，默认InnoDB",
-                    "type": "string",
-                    "default": "InnoDB"
-                },
-                "log-mode": {
-                    "description": "是否开启Gorm全局日志",
-                    "type": "string"
-                },
-                "log-zap": {
-                    "description": "是否通过zap写入日志文件",
-                    "type": "boolean"
-                },
-                "max-idle-conns": {
-                    "description": "空闲中的最大连接数",
-                    "type": "integer"
-                },
-                "max-open-conns": {
-                    "description": "打开到数据库的最大连接数",
-                    "type": "integer"
-                },
-                "password": {
-                    "description": "数据库密码",
-                    "type": "string"
-                },
-                "path": {
-                    "description": "服务器地址:端口",
-                    "type": "string"
-                },
-                "port": {
-                    "description": ":端口",
-                    "type": "string"
-                },
-                "prefix": {
-                    "description": "全局表前缀，单独定义TableName则不生效",
-                    "type": "string"
-                },
-                "singular": {
-                    "description": "是否开启全局禁用复数，true表示开启",
-                    "type": "boolean"
                 },
                 "username": {
                     "description": "数据库用户名",
@@ -5077,11 +5095,6 @@
                     "description": "数据库名",
                     "type": "string"
                 },
-                "engine": {
-                    "description": "数据库引擎，默认InnoDB",
-                    "type": "string",
-                    "default": "InnoDB"
-                },
                 "log-mode": {
                     "description": "是否开启Gorm全局日志",
                     "type": "string"
@@ -5109,14 +5122,6 @@
                 "port": {
                     "description": ":端口",
                     "type": "string"
-                },
-                "prefix": {
-                    "description": "全局表前缀，单独定义TableName则不生效",
-                    "type": "string"
-                },
-                "singular": {
-                    "description": "是否开启全局禁用复数，true表示开启",
-                    "type": "boolean"
                 },
                 "username": {
                     "description": "数据库用户名",
@@ -5182,11 +5187,7 @@
                 },
                 "autocode": {
                     "description": "auto",
-                    "allOf": [
-                        {
-                            "$ref": "#/definitions/config.Autocode"
-                        }
-                    ]
+                    "$ref": "#/definitions/config.Autocode"
                 },
                 "aws-s3": {
                     "$ref": "#/definitions/config.AwsS3"
@@ -5196,11 +5197,7 @@
                 },
                 "cors": {
                     "description": "跨域配置",
-                    "allOf": [
-                        {
-                            "$ref": "#/definitions/config.CORS"
-                        }
-                    ]
+                    "$ref": "#/definitions/config.CORS"
                 },
                 "db-list": {
                     "type": "array",
@@ -5209,7 +5206,7 @@
                     }
                 },
                 "email": {
-                    "$ref": "#/definitions/github_com_flipped-aurora_gin-vue-admin_server_config.Email"
+                    "$ref": "#/definitions/config.Email"
                 },
                 "excel": {
                     "$ref": "#/definitions/config.Excel"
@@ -5222,25 +5219,11 @@
                 },
                 "local": {
                     "description": "oss",
-                    "allOf": [
-                        {
-                            "$ref": "#/definitions/config.Local"
-                        }
-                    ]
-                },
-                "mssql": {
-                    "$ref": "#/definitions/config.Mssql"
+                    "$ref": "#/definitions/config.Local"
                 },
                 "mysql": {
                     "description": "gorm",
-                    "allOf": [
-                        {
-                            "$ref": "#/definitions/config.Mysql"
-                        }
-                    ]
-                },
-                "oracle": {
-                    "$ref": "#/definitions/config.Oracle"
+                    "$ref": "#/definitions/config.Mysql"
                 },
                 "pgsql": {
                     "$ref": "#/definitions/config.Pgsql"
@@ -5282,11 +5265,6 @@
                 "disable": {
                     "type": "boolean"
                 },
-                "engine": {
-                    "description": "数据库引擎，默认InnoDB",
-                    "type": "string",
-                    "default": "InnoDB"
-                },
                 "log-mode": {
                     "description": "是否开启Gorm全局日志",
                     "type": "string"
@@ -5314,14 +5292,6 @@
                 "port": {
                     "description": ":端口",
                     "type": "string"
-                },
-                "prefix": {
-                    "description": "全局表前缀，单独定义TableName则不生效",
-                    "type": "string"
-                },
-                "singular": {
-                    "description": "是否开启全局禁用复数，true表示开启",
-                    "type": "boolean"
                 },
                 "type": {
                     "type": "string"
@@ -5355,9 +5325,6 @@
                 },
                 "oss-type": {
                     "description": "Oss类型",
-                    "type": "string"
-                },
-                "router-prefix": {
                     "type": "string"
                 },
                 "use-multipoint": {
@@ -5478,11 +5445,7 @@
                 },
                 "sysUser": {
                     "description": "管理详情",
-                    "allOf": [
-                        {
-                            "$ref": "#/definitions/system.SysUser"
-                        }
-                    ]
+                    "$ref": "#/definitions/system.SysUser"
                 },
                 "sysUserAuthorityID": {
                     "description": "管理角色ID",
@@ -5595,36 +5558,18 @@
                 }
             }
         },
-        "github_com_flipped-aurora_gin-vue-admin_server_config.Email": {
+        "example.ExcelInfo": {
             "type": "object",
             "properties": {
-                "from": {
-                    "description": "收件人",
+                "fileName": {
+                    "description": "文件名",
                     "type": "string"
                 },
-                "host": {
-                    "description": "服务器地址",
-                    "type": "string"
-                },
-                "is-ssl": {
-                    "description": "是否SSL",
-                    "type": "boolean"
-                },
-                "nickname": {
-                    "description": "昵称",
-                    "type": "string"
-                },
-                "port": {
-                    "description": "端口",
-                    "type": "integer"
-                },
-                "secret": {
-                    "description": "密钥",
-                    "type": "string"
-                },
-                "to": {
-                    "description": "收件人:多个以英文逗号分隔",
-                    "type": "string"
+                "infoList": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/system.SysBaseMenu"
+                    }
                 }
             }
         },
@@ -5791,40 +5736,28 @@
             "type": "object",
             "properties": {
                 "authorityId": {
-                    "type": "string",
-                    "example": "int 角色id"
+                    "type": "integer"
                 },
                 "authorityIds": {
-                    "type": "string",
-                    "example": "[]uint 角色id"
-                },
-                "email": {
-                    "type": "string",
-                    "example": "电子邮箱"
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
                 },
                 "enable": {
-                    "type": "string",
-                    "example": "int 是否启用"
+                    "type": "integer"
                 },
                 "headerImg": {
-                    "type": "string",
-                    "example": "头像链接"
+                    "type": "string"
                 },
                 "nickName": {
-                    "type": "string",
-                    "example": "昵称"
+                    "type": "string"
                 },
                 "passWord": {
-                    "type": "string",
-                    "example": "密码"
-                },
-                "phone": {
-                    "type": "string",
-                    "example": "电话号码"
+                    "type": "string"
                 },
                 "userName": {
-                    "type": "string",
-                    "example": "用户名"
+                    "type": "string"
                 }
             }
         },
@@ -6018,7 +5951,9 @@
         "response.PageResult": {
             "type": "object",
             "properties": {
-                "list": {},
+                "list": {
+                    "type": "object"
+                },
                 "page": {
                     "type": "integer"
                 },
@@ -6047,7 +5982,9 @@
                 "code": {
                     "type": "integer"
                 },
-                "data": {},
+                "data": {
+                    "type": "object"
+                },
                 "msg": {
                     "type": "string"
                 }
@@ -6131,9 +6068,6 @@
                 "captchaLength": {
                     "type": "integer"
                 },
-                "openCaptcha": {
-                    "type": "boolean"
-                },
                 "picPath": {
                     "type": "string"
                 }
@@ -6184,10 +6118,6 @@
                 "autoMoveFile": {
                     "description": "是否自动移动文件",
                     "type": "boolean"
-                },
-                "businessDB": {
-                    "description": "业务数据库",
-                    "type": "string"
                 },
                 "description": {
                     "description": "Struct中文名称",
@@ -6273,38 +6203,6 @@
                 "require": {
                     "description": "是否必填",
                     "type": "boolean"
-                },
-                "sort": {
-                    "description": "是否增加排序",
-                    "type": "boolean"
-                }
-            }
-        },
-        "system.Meta": {
-            "type": "object",
-            "properties": {
-                "activeName": {
-                    "type": "string"
-                },
-                "closeTab": {
-                    "description": "自动关闭tab",
-                    "type": "boolean"
-                },
-                "defaultMenu": {
-                    "description": "是否是基础路由（开发中）",
-                    "type": "boolean"
-                },
-                "icon": {
-                    "description": "菜单图标",
-                    "type": "string"
-                },
-                "keepAlive": {
-                    "description": "是否缓存",
-                    "type": "boolean"
-                },
-                "title": {
-                    "description": "菜单名",
-                    "type": "string"
                 }
             }
         },
@@ -6432,6 +6330,10 @@
                         "$ref": "#/definitions/system.SysBaseMenu"
                     }
                 },
+                "closeTab": {
+                    "description": "自动关闭tab",
+                    "type": "boolean"
+                },
                 "component": {
                     "description": "对应前端文件路径",
                     "type": "string"
@@ -6440,27 +6342,31 @@
                     "description": "创建时间",
                     "type": "string"
                 },
+                "defaultMenu": {
+                    "description": "是否是基础路由（开发中）",
+                    "type": "boolean"
+                },
                 "hidden": {
                     "description": "是否在列表隐藏",
                     "type": "boolean"
                 },
+                "icon": {
+                    "description": "菜单图标",
+                    "type": "string"
+                },
                 "id": {
                     "description": "主键ID",
                     "type": "integer"
+                },
+                "keepAlive": {
+                    "description": "是否缓存",
+                    "type": "boolean"
                 },
                 "menuBtn": {
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/system.SysBaseMenuBtn"
                     }
-                },
-                "meta": {
-                    "description": "附加属性",
-                    "allOf": [
-                        {
-                            "$ref": "#/definitions/system.Meta"
-                        }
-                    ]
                 },
                 "name": {
                     "description": "路由name",
@@ -6483,6 +6389,10 @@
                 "sort": {
                     "description": "排序标记",
                     "type": "integer"
+                },
+                "title": {
+                    "description": "菜单名",
+                    "type": "string"
                 },
                 "updatedAt": {
                     "description": "更新时间",
@@ -6645,6 +6555,10 @@
                         "$ref": "#/definitions/system.SysMenu"
                     }
                 },
+                "closeTab": {
+                    "description": "自动关闭tab",
+                    "type": "boolean"
+                },
                 "component": {
                     "description": "对应前端文件路径",
                     "type": "string"
@@ -6653,13 +6567,25 @@
                     "description": "创建时间",
                     "type": "string"
                 },
+                "defaultMenu": {
+                    "description": "是否是基础路由（开发中）",
+                    "type": "boolean"
+                },
                 "hidden": {
                     "description": "是否在列表隐藏",
                     "type": "boolean"
                 },
+                "icon": {
+                    "description": "菜单图标",
+                    "type": "string"
+                },
                 "id": {
                     "description": "主键ID",
                     "type": "integer"
+                },
+                "keepAlive": {
+                    "description": "是否缓存",
+                    "type": "boolean"
                 },
                 "menuBtn": {
                     "type": "array",
@@ -6669,14 +6595,6 @@
                 },
                 "menuId": {
                     "type": "string"
-                },
-                "meta": {
-                    "description": "附加属性",
-                    "allOf": [
-                        {
-                            "$ref": "#/definitions/system.Meta"
-                        }
-                    ]
                 },
                 "name": {
                     "description": "路由name",
@@ -6699,6 +6617,10 @@
                 "sort": {
                     "description": "排序标记",
                     "type": "integer"
+                },
+                "title": {
+                    "description": "菜单名",
+                    "type": "string"
                 },
                 "updatedAt": {
                     "description": "更新时间",

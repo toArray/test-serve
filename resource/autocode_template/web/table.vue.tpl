@@ -1,19 +1,11 @@
 <template>
   <div>
     <div class="gva-search-box">
-      <el-form ref="elSearchFormRef" :inline="true" :model="searchInfo" class="demo-form-inline" :rules="searchRule" @keyup.enter="onSubmit">
-      <el-form-item label="创建日期" prop="createdAt">
-      <template #label>
-        <span>
-          创建日期
-          <el-tooltip content="搜索范围是开始日期（包含）至结束日期（不包含）">
-            <el-icon><QuestionFilled /></el-icon>
-          </el-tooltip>
-        </span>
-      </template>
-      <el-date-picker v-model="searchInfo.startCreatedAt" type="datetime" placeholder="开始日期" :disabled-date="time=> searchInfo.endCreatedAt ? time.getTime() > searchInfo.endCreatedAt.getTime() : false"></el-date-picker>
+      <el-form :inline="true" :model="searchInfo" class="demo-form-inline">
+      <el-form-item label="创建时间">
+      <el-date-picker v-model="searchInfo.startCreatedAt" type="datetime" placeholder="开始时间"></el-date-picker>
        —
-      <el-date-picker v-model="searchInfo.endCreatedAt" type="datetime" placeholder="结束日期" :disabled-date="time=> searchInfo.startCreatedAt ? time.getTime() < searchInfo.startCreatedAt.getTime() : false"></el-date-picker>
+      <el-date-picker v-model="searchInfo.endCreatedAt" type="datetime" placeholder="结束时间"></el-date-picker>
       </el-form-item>
            {{- range .Fields}}  {{- if .FieldSearchType}} {{- if eq .FieldType "bool" }}
             <el-form-item label="{{.FieldDesc}}" prop="{{.FieldJson}}">
@@ -37,7 +29,7 @@
             </el-select>
             </el-form-item>
             {{- else}}
-        <el-form-item label="{{.FieldDesc}}" prop="{{.FieldJson}}">
+        <el-form-item label="{{.FieldDesc}}">
 
 
         {{- if eq .FieldType "float64" "int"}}
@@ -56,17 +48,9 @@
           {{- end}}
         {{- else if eq .FieldType "time.Time"}}
             {{if eq .FieldSearchType "BETWEEN" "NOT BETWEEN"}}
-            <template #label>
-            <span>
-              {{.FieldDesc}}
-              <el-tooltip content="搜索范围是开始日期（包含）至结束日期（不包含）">
-                <el-icon><QuestionFilled /></el-icon>
-              </el-tooltip>
-            </span>
-          </template>
-            <el-date-picker v-model="searchInfo.start{{.FieldName}}" type="datetime" placeholder="开始日期" :disabled-date="time=> searchInfo.end{{.FieldName}} ? time.getTime() > searchInfo.end{{.FieldName}}.getTime() : false"></el-date-picker>
+            <el-date-picker v-model="searchInfo.start{{.FieldName}}" type="datetime" placeholder="搜索条件（起）"></el-date-picker>
             —
-            <el-date-picker v-model="searchInfo.end{{.FieldName}}" type="datetime" placeholder="结束日期" :disabled-date="time=> searchInfo.start{{.FieldName}} ? time.getTime() < searchInfo.start{{.FieldName}}.getTime() : false"></el-date-picker>
+            <el-date-picker v-model="searchInfo.end{{.FieldName}}" type="datetime" placeholder="搜索条件（止）"></el-date-picker>
            {{- else}}
            <el-date-picker v-model="searchInfo.{{.FieldJson}}" type="datetime" placeholder="搜索条件"></el-date-picker>
           {{- end}}
@@ -76,22 +60,22 @@
 
         </el-form-item>{{ end }}{{ end }}{{ end }}
         <el-form-item>
-          <el-button type="primary" icon="search" @click="onSubmit">查询</el-button>
-          <el-button icon="refresh" @click="onReset">重置</el-button>
+          <el-button size="small" type="primary" icon="search" @click="onSubmit">查询</el-button>
+          <el-button size="small" icon="refresh" @click="onReset">重置</el-button>
         </el-form-item>
       </el-form>
     </div>
     <div class="gva-table-box">
         <div class="gva-btn-list">
-            <el-button type="primary" icon="plus" @click="openDialog">新增</el-button>
+            <el-button size="small" type="primary" icon="plus" @click="openDialog">新增</el-button>
             <el-popover v-model:visible="deleteVisible" placement="top" width="160">
             <p>确定要删除吗？</p>
             <div style="text-align: right; margin-top: 8px;">
-                <el-button type="primary" link @click="deleteVisible = false">取消</el-button>
-                <el-button type="primary" @click="onDelete">确定</el-button>
+                <el-button size="small" type="primary" link @click="deleteVisible = false">取消</el-button>
+                <el-button size="small" type="primary" @click="onDelete">确定</el-button>
             </div>
             <template #reference>
-                <el-button icon="delete" style="margin-left: 10px;" :disabled="!multipleSelection.length" @click="deleteVisible = true">删除</el-button>
+                <el-button icon="delete" size="small" style="margin-left: 10px;" :disabled="!multipleSelection.length" @click="deleteVisible = true">删除</el-button>
             </template>
             </el-popover>
         </div>
@@ -125,28 +109,14 @@
          <el-table-column {{- if .Sort}} sortable{{- end}} align="left" label="{{.FieldDesc}}" width="180">
             <template #default="scope">{{"{{"}} formatDate(scope.row.{{.FieldJson}}) {{"}}"}}</template>
          </el-table-column>
-          {{- else if eq .FieldType "picture" }}
-          <el-table-column label="{{.FieldDesc}}" width="200">
-              <template #default="scope">
-                <el-image style="width: 100px; height: 100px" :src="getUrl(scope.row.{{.FieldJson}})" fit="cover"/>
-              </template>
-          </el-table-column>
-           {{- else if eq .FieldType "file" }}
-                    <el-table-column label="{{.FieldDesc}}" width="200">
-                        <template #default="scope">
-                             <div class="file-list">
-                               <el-tag v-for="file in scope.row.{{.FieldJson}}" :key="file.uid">{{"{{"}}file.name{{"}}"}}</el-tag>
-                             </div>
-                        </template>
-                    </el-table-column>
         {{- else }}
         <el-table-column {{- if .Sort}} sortable{{- end}} align="left" label="{{.FieldDesc}}" prop="{{.FieldJson}}" width="120" />
         {{- end }}
         {{- end }}
-        <el-table-column align="left" label="操作">
+        <el-table-column align="left" label="按钮组">
             <template #default="scope">
-            <el-button type="primary" link icon="edit" class="table-button" @click="update{{.StructName}}Func(scope.row)">变更</el-button>
-            <el-button type="primary" link icon="delete" @click="deleteRow(scope.row)">删除</el-button>
+            <el-button type="primary" link icon="edit" size="small" class="table-button" @click="update{{.StructName}}Func(scope.row)">变更</el-button>
+            <el-button type="primary" link icon="delete" size="small" @click="deleteRow(scope.row)">删除</el-button>
             </template>
         </el-table-column>
         </el-table>
@@ -162,7 +132,7 @@
             />
         </div>
     </div>
-    <el-dialog v-model="dialogFormVisible" :before-close="closeDialog" :title="type==='create'?'添加':'修改'" destroy-on-close>
+    <el-dialog v-model="dialogFormVisible" :before-close="closeDialog" title="弹窗操作">
       <el-form :model="formData" label-position="right" ref="elFormRef" :rules="rule" label-width="80px">
     {{- range .Fields}}
         <el-form-item label="{{.FieldDesc}}:"  prop="{{.FieldJson}}" >
@@ -192,19 +162,13 @@
                <el-option v-for="item in [{{.DataTypeLong}}]" :key="item" :label="item" :value="item" />
             </el-select>
       {{- end }}
-      {{- if eq .FieldType "picture" }}
-            <SelectImage v-model="formData.{{ .FieldJson }}" />
-      {{- end }}
-      {{- if eq .FieldType "file" }}
-            <SelectFile v-model="formData.{{ .FieldJson }}" />
-      {{- end }}
         </el-form-item>
       {{- end }}
       </el-form>
       <template #footer>
         <div class="dialog-footer">
-          <el-button @click="closeDialog">取 消</el-button>
-          <el-button type="primary" @click="enterDialog">确 定</el-button>
+          <el-button size="small" @click="closeDialog">取 消</el-button>
+          <el-button size="small" type="primary" @click="enterDialog">确 定</el-button>
         </div>
       </template>
     </el-dialog>
@@ -226,19 +190,6 @@ import {
   find{{.StructName}},
   get{{.StructName}}List
 } from '@/api/{{.PackageName}}'
-
-{{- if or .HasPic .HasFile}}
-import { getUrl } from '@/utils/image'
-{{- end }}
-{{- if .HasPic }}
-// 图片选择组件
-import SelectImage from '@/components/selectImage/selectImage.vue'
-{{- end }}
-
-{{- if .HasFile }}
-// 文件选择组件
-import SelectFile from '@/components/selectFile/selectFile.vue'
-{{- end }}
 
 // 全量引入格式化工具 请按需保留
 import { getDictFunc, formatDate, formatBoolean, filterDict } from '@/utils/format'
@@ -277,51 +228,13 @@ const rule = reactive({
                    required: true,
                    message: '{{ .ErrorText }}',
                    trigger: ['input','blur'],
-               },
-               {
-                   whitespace: true,
-                   message: '不能只输入空格',
-                   trigger: ['input', 'blur'],
-              }],
+               }],
             {{- end }}
     {{- end }}
 })
 
-const searchRule = reactive({
-  createdAt: [
-    { validator: (rule, value, callback) => {
-      if (searchInfo.value.startCreatedAt && !searchInfo.value.endCreatedAt) {
-        callback(new Error('请填写结束日期'))
-      } else if (!searchInfo.value.startCreatedAt && searchInfo.value.endCreatedAt) {
-        callback(new Error('请填写开始日期'))
-      } else if (searchInfo.value.startCreatedAt && searchInfo.value.endCreatedAt && (searchInfo.value.startCreatedAt.getTime() === searchInfo.value.endCreatedAt.getTime() || searchInfo.value.startCreatedAt.getTime() > searchInfo.value.endCreatedAt.getTime())) {
-        callback(new Error('开始日期应当早于结束日期'))
-      } else {
-        callback()
-      }
-    }, trigger: 'change' }
-  ],
-  {{- range .Fields }}
-    {{- if .FieldSearchType}} 
-      {{- if eq .FieldType "time.Time" }}
-        {{.FieldJson }} : [{ validator: (rule, value, callback) => {
-        if (searchInfo.value.start{{.FieldName}} && !searchInfo.value.end{{.FieldName}}) {
-          callback(new Error('请填写结束日期'))
-        } else if (!searchInfo.value.start{{.FieldName}} && searchInfo.value.end{{.FieldName}}) {
-          callback(new Error('请填写开始日期'))
-        } else if (searchInfo.value.start{{.FieldName}} && searchInfo.value.end{{.FieldName}} && (searchInfo.value.start{{.FieldName}}.getTime() === searchInfo.value.end{{.FieldName}}.getTime() || searchInfo.value.start{{.FieldName}}.getTime() > searchInfo.value.end{{.FieldName}}.getTime())) {
-          callback(new Error('开始日期应当早于结束日期'))
-        } else {
-          callback()
-        }
-      }, trigger: 'change' }],
-      {{- end }}
-    {{- end }}
-  {{- end }}
-})
-
 const elFormRef = ref()
-const elSearchFormRef = ref()
+
 
 // =========== 表格控制部分 ===========
 const page = ref(1)
@@ -347,16 +260,13 @@ const onReset = () => {
 
 // 搜索
 const onSubmit = () => {
-  elSearchFormRef.value?.validate(async(valid) => {
-    if (!valid) return
-    page.value = 1
-    pageSize.value = 10
-    {{- range .Fields}}{{- if eq .FieldType "bool" }}
-    if (searchInfo.value.{{.FieldJson}} === ""){
-        searchInfo.value.{{.FieldJson}}=null
-    }{{ end }}{{ end }}
-    getTableData()
-  })
+  page.value = 1
+  pageSize.value = 10
+{{- range .Fields}}{{- if eq .FieldType "bool" }}
+  if (searchInfo.value.{{.FieldJson}} === ""){
+      searchInfo.value.{{.FieldJson}}=null
+  }{{ end }}{{ end }}
+  getTableData()
 }
 
 // 分页
@@ -534,19 +444,7 @@ const enterDialog = async () => {
               }
       })
 }
-{{if .HasFile }}
-const downloadFile = (url) => {
-    window.open(getUrl(url), '_blank')
-}
-{{end}}
 </script>
 
 <style>
-{{if .HasFile }}
-.file-list{
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-}
-{{end}}
 </style>

@@ -5,8 +5,8 @@ import (
 	sysModel "github.com/flipped-aurora/gin-vue-admin/server/model/system"
 	"github.com/flipped-aurora/gin-vue-admin/server/service/system"
 	"github.com/flipped-aurora/gin-vue-admin/server/utils"
-	"github.com/gofrs/uuid"
 	"github.com/pkg/errors"
+	uuid "github.com/satori/go.uuid"
 	"gorm.io/gorm"
 )
 
@@ -24,7 +24,7 @@ func (i *initUser) MigrateTable(ctx context.Context) (context.Context, error) {
 	if !ok {
 		return ctx, system.ErrMissingDBContext
 	}
-	return ctx, db.AutoMigrate(&sysModel.SysUser{}, &sysModel.SysChatGptOption{})
+	return ctx, db.AutoMigrate(&sysModel.SysUser{})
 }
 
 func (i *initUser) TableCreated(ctx context.Context) bool {
@@ -49,7 +49,7 @@ func (i *initUser) InitializeData(ctx context.Context) (next context.Context, er
 
 	entities := []sysModel.SysUser{
 		{
-			UUID:        uuid.Must(uuid.NewV4()),
+			UUID:        uuid.NewV4(),
 			Username:    "admin",
 			Password:    adminPassword,
 			NickName:    "Mr.奇淼",
@@ -59,7 +59,7 @@ func (i *initUser) InitializeData(ctx context.Context) (next context.Context, er
 			Email:       "333333333@qq.com",
 		},
 		{
-			UUID:        uuid.Must(uuid.NewV4()),
+			UUID:        uuid.NewV4(),
 			Username:    "a303176530",
 			Password:    password,
 			NickName:    "用户1",

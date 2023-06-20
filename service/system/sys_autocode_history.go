@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	systemReq "github.com/flipped-aurora/gin-vue-admin/server/model/system/request"
-	"github.com/flipped-aurora/gin-vue-admin/server/utils/ast"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -121,9 +120,6 @@ func (autoCodeHistoryService *AutoCodeHistoryService) RollBack(info *systemReq.R
 			_ = utils.AutoClearCode(meta[0], meta[2])
 		}
 	}
-
-	ast.RollBackAst(md.Package, md.StructName)
-
 	md.Flag = 1
 	return global.GVA_DB.Save(&md).Error
 }
