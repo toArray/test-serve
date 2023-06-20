@@ -1,0 +1,12 @@
+[github.com/flipped-aurora/gin-vue-admin/server]2023/06/20 - 10:47:23.165	[34minfo[0m	/Users/luoqiang/gopath/src/test-gva/server/initialize/gorm.go:63	register table success
+[github.com/flipped-aurora/gin-vue-admin/server]2023/06/20 - 10:47:23.167	[34minfo[0m	/Users/luoqiang/gopath/src/test-gva/server/initialize/router.go:38	register swagger handler
+[github.com/flipped-aurora/gin-vue-admin/server]2023/06/20 - 10:47:23.169	[34minfo[0m	/Users/luoqiang/gopath/src/test-gva/server/initialize/router.go:80	router register success
+[github.com/flipped-aurora/gin-vue-admin/server]2023/06/20 - 10:47:23.169	[34minfo[0m	/Users/luoqiang/gopath/src/test-gva/server/core/server.go:36	server run success on 	{"address": ":8888"}
+[github.com/flipped-aurora/gin-vue-admin/server]2023/06/20 - 10:55:00.234	[34minfo[0m	/Users/luoqiang/gopath/src/test-gva/server/initialize/gorm.go:63	register table success
+[github.com/flipped-aurora/gin-vue-admin/server]2023/06/20 - 10:55:00.236	[34minfo[0m	/Users/luoqiang/gopath/src/test-gva/server/initialize/router.go:38	register swagger handler
+[github.com/flipped-aurora/gin-vue-admin/server]2023/06/20 - 10:55:00.238	[34minfo[0m	/Users/luoqiang/gopath/src/test-gva/server/initialize/router.go:80	router register success
+[github.com/flipped-aurora/gin-vue-admin/server]2023/06/20 - 10:55:00.238	[34minfo[0m	/Users/luoqiang/gopath/src/test-gva/server/core/server.go:36	server run success on 	{"address": ":8888"}
+[github.com/flipped-aurora/gin-vue-admin/server]2023/06/20 - 10:58:32.638	[34minfo[0m	/Users/luoqiang/gopath/src/test-gva/server/initialize/gorm.go:63	register table success
+[github.com/flipped-aurora/gin-vue-admin/server]2023/06/20 - 10:58:32.640	[34minfo[0m	/Users/luoqiang/gopath/src/test-gva/server/initialize/router.go:38	register swagger handler
+[github.com/flipped-aurora/gin-vue-admin/server]2023/06/20 - 10:58:32.642	[34minfo[0m	/Users/luoqiang/gopath/src/test-gva/server/initialize/router.go:80	router register success
+[github.com/flipped-aurora/gin-vue-admin/server]2023/06/20 - 10:58:32.642	[34minfo[0m	/Users/luoqiang/gopath/src/test-gva/server/core/server.go:36	server run success on 	{"address": ":8888"}

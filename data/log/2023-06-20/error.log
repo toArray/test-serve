@@ -1,0 +1,2 @@
+[github.com/flipped-aurora/gin-vue-admin/server]2023/06/20 - 10:54:33.755	[31merror[0m	/Users/luoqiang/gopath/src/test-gva/server/core/server.go:48	accept tcp [::]:8888: use of closed network connection
+[github.com/flipped-aurora/gin-vue-admin/server]2023/06/20 - 10:58:12.314	[31merror[0m	/Users/luoqiang/gopath/src/test-gva/server/core/server.go:48	accept tcp [::]:8888: use of closed network connection

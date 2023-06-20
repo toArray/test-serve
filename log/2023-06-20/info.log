@@ -1,0 +1,12 @@
+[github.com/flipped-aurora/gin-vue-admin/server]2023/06/20 - 10:30:25.255	[34minfo[0m	/Users/luoqiang/gopath/src/test-gva/server/initialize/router.go:37	register swagger handler
+[github.com/flipped-aurora/gin-vue-admin/server]2023/06/20 - 10:30:25.259	[34minfo[0m	/Users/luoqiang/gopath/src/test-gva/server/initialize/router.go:78	router register success
+[github.com/flipped-aurora/gin-vue-admin/server]2023/06/20 - 10:30:25.259	[34minfo[0m	/Users/luoqiang/gopath/src/test-gva/server/core/server.go:36	server run success on 	{"address": ":8888"}
+[github.com/flipped-aurora/gin-vue-admin/server]2023/06/20 - 10:30:39.809	[34minfo[0m	/Users/luoqiang/gopath/src/test-gva/server/api/v1/system/sys_initdb.go:57	前往初始化数据库
+[github.com/flipped-aurora/gin-vue-admin/server]2023/06/20 - 10:34:31.561	[34minfo[0m	/Users/luoqiang/gopath/src/test-gva/server/initialize/gorm.go:63	register table success
+[github.com/flipped-aurora/gin-vue-admin/server]2023/06/20 - 10:34:31.563	[34minfo[0m	/Users/luoqiang/gopath/src/test-gva/server/initialize/router.go:38	register swagger handler
+[github.com/flipped-aurora/gin-vue-admin/server]2023/06/20 - 10:34:31.566	[34minfo[0m	/Users/luoqiang/gopath/src/test-gva/server/initialize/router.go:80	router register success
+[github.com/flipped-aurora/gin-vue-admin/server]2023/06/20 - 10:34:31.566	[34minfo[0m	/Users/luoqiang/gopath/src/test-gva/server/core/server.go:36	server run success on 	{"address": ":8888"}
+[github.com/flipped-aurora/gin-vue-admin/server]2023/06/20 - 10:43:27.724	[34minfo[0m	/Users/luoqiang/gopath/src/test-gva/server/initialize/gorm.go:63	register table success
+[github.com/flipped-aurora/gin-vue-admin/server]2023/06/20 - 10:43:27.726	[34minfo[0m	/Users/luoqiang/gopath/src/test-gva/server/initialize/router.go:38	register swagger handler
+[github.com/flipped-aurora/gin-vue-admin/server]2023/06/20 - 10:43:27.729	[34minfo[0m	/Users/luoqiang/gopath/src/test-gva/server/initialize/router.go:80	router register success
+[github.com/flipped-aurora/gin-vue-admin/server]2023/06/20 - 10:43:27.729	[34minfo[0m	/Users/luoqiang/gopath/src/test-gva/server/core/server.go:36	server run success on 	{"address": ":8888"}
